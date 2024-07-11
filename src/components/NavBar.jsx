@@ -33,18 +33,25 @@ function NavBar() {
                 Productos
               </Link>
             </li>
-            <Link to="/testing" className="nav-link active">
-              Testeos
-            </Link>
-            <Link to="/pedidos" className="nav-link active" aria-current="page">
-              Pedidos
-            </Link>
-            <Link className="nav-link active" aria-current="page">
-              Clientes
-            </Link>
-            <Link className="nav-link active" aria-current="page">
-              Admins
-            </Link>
+            <li className="nav-item">
+              <Link
+                to="/pedidos"
+                className="nav-link active"
+                aria-current="page"
+              >
+                Pedidos
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link active" aria-current="page">
+                Clientes
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link active" aria-current="page">
+                Admins
+              </Link>
+            </li>
           </ul>
           <div className="d-flex align-items-center">
             <UserIcon></UserIcon>

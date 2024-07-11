@@ -1,7 +1,6 @@
 import user from "./img/user.png";
-import edit from "./img/edit.png";
 import logout from "./img/log-out.png";
-import "./App.css";
+import styles from "../styles/UserIcon.module.css";
 import { PersonCircle } from "react-bootstrap-icons";
 import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
@@ -30,9 +29,12 @@ function UserIcon() {
 
   return (
     <div className="App z-3">
-      <div className="menu_container position-relative z-3" ref={menuRef}>
+      <div
+        className={`${styles["menu_container"]} position-relative z-3`}
+        ref={menuRef}
+      >
         <div
-          className="menu_trigger"
+          className={styles["menu_trigger"]}
           onClick={() => {
             setOpen(!open);
           }}
@@ -43,7 +45,9 @@ function UserIcon() {
         </div>
 
         <div
-          className={`dropdown_menu border z-3 ${open ? "active" : "inactive"}`}
+          className={`${styles["dropdown_menu"]} border z-3 ${
+            open ? styles["active"] : styles["inactive"]
+          }`}
         >
           <h3>
             {token == "" ? "Es necesario ser Admin" : "Bienvenido/a"}
@@ -76,7 +80,9 @@ function UserIcon() {
 // eslint-disable-next-line react/prop-types
 function DropdownItem({ img, text, to }) {
   return (
-    <li className="text-center dropdownItem  border-top d-flex align-items-center p-2">
+    <li
+      className={`text-center ${styles["dropdownItem"]}  border-top d-flex align-items-center p-2`}
+    >
       <img src={img}></img>
       <Link to={to} className="ps-3">
         {text}

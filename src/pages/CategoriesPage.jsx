@@ -120,7 +120,7 @@ function CategoriesPage() {
             events={{ cellEdited: handleCellEdited }}
             options={{
               responsiveLayout: "hide",
-              height: 600,
+              height: 300,
             }}
           />
         </div>

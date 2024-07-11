@@ -36,22 +36,81 @@ function OrdersPage() {
   const columns = [
     {
       title: "Usuario",
+      hozAlign: "center",
+      headerHozAlign: "center",
+      headerSort: false,
       field: "user",
       formatter: (cell) => {
         return cell.getRow().getData().user.name;
       },
     },
-    { title: "Estatus", field: "status" },
-    { title: "Direccion", field: "address" },
+    {
+      title: "Estatus",
+      headerSort: false,
+      hozAlign: "center",
+      headerHozAlign: "center",
+      field: "status",
+    },
+    {
+      title: "Total",
+      hozAlign: "center",
+      headerHozAlign: "center",
+      headerSort: false,
+      field: "products",
+      formatter: (cell) => {
+        const totalPrice = cell.getValue().reduce((prev, current) => {
+          console.log(cell.getValue());
+          return prev + parseFloat(current.price[current.volume]) * current.qty;
+        }, 0);
+        return totalPrice.toFixed(2);
+      },
+    },
   ];
 
   const nestedColumns = [
     {
-      title: "Product Name",
+      title: "Producto",
+      headerSort: false,
       field: "name",
+      hozAlign: "center",
+      headerHozAlign: "center",
     },
-    { title: "Product Price", field: "price" },
-    { title: "Quantity", field: "qty" },
+    {
+      title: "Medida",
+      headerSort: false,
+      field: "volume",
+      hozAlign: "center",
+      headerHozAlign: "center",
+    },
+    {
+      title: "Precio",
+      headerSort: false,
+      field: "price",
+      hozAlign: "center",
+      formatter: (cell) => {
+        const { price, volume } = cell.getData();
+        return price[volume];
+      },
+      headerHozAlign: "center",
+    },
+    {
+      title: "Cantidad",
+      headerSort: false,
+      field: "qty",
+      hozAlign: "center",
+      headerHozAlign: "center",
+    },
+    {
+      title: "Subtotal",
+      hozAlign: "center",
+      headerSort: false,
+      headerHozAlign: "center",
+      formatter: (cell) => {
+        const { price, volume, qty } = cell.getData();
+        const total = price[volume] * qty;
+        return total.toFixed(2);
+      },
+    },
   ];
   const rowFormatter = (row) => {
     const element = row.getElement(); // Get row element
