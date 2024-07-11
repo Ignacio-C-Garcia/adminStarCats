@@ -3,33 +3,11 @@ import NavBar from "../components/NavBar";
 import { ReactTabulator } from "react-tabulator";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import "react-tabulator/lib/styles.css";
-import "react-tabulator/css/bootstrap/tabulator_bootstrap.min.css";
-import SideBar from "../components/adminSideBar";
 import { TabulatorFull as Tabulator } from "tabulator-tables"; // Import Tabulator
-import "./NestedTable.css"; // Custom styles for tables
-function Dashboard() {
+import "../styles/NestedTable.css"; // Custom styles for tables
+function OrdersPage() {
   const auth = useSelector((state) => state.auth);
-  const [data, setData] = useState([
-    {
-      userId: 1,
-      status: "Pending",
-      address: "Casavalle",
-      products: [
-        { id: 1, price: 12, qty: 4, subtotal: 48 },
-        { id: 2, price: 17, qty: 2, subtotal: 34 },
-      ],
-    },
-    {
-      userId: 2,
-      status: "Pending",
-      address: "Cerro",
-      products: [
-        { id: 4, price: 1, qty: 40, subtotal: 40 },
-        { id: 7, price: 22, qty: 1, subtotal: 22 },
-      ],
-    },
-  ]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,32 +73,23 @@ function Dashboard() {
   return (
     <>
       <NavBar />
-      <div className="row">
-        <div className="col-2">
-          <SideBar />
-        </div>
-        <div className="col-10">
-          <div className="">
-            <h3>Parent Table</h3>
-            <div className="tabulator-wrapper">
-              <ReactTabulator
-                data={data}
-                columns={columns}
-                layout="fitColumns"
-                rowFormatter={rowFormatter}
-                options={{
-                  responsiveLayout: "hide",
-                  height: "500px",
-                }}
-              />
-            </div>
-          </div>
+      <div className="container">
+        <div className="tabulator-wrapper">
+          <ReactTabulator
+            data={data}
+            columns={columns}
+            layout="fitColumns"
+            rowFormatter={rowFormatter}
+            options={{
+              responsiveLayout: "hide",
+              height: "500px",
+            }}
+          />
         </div>
       </div>
-
       <Footer />
     </>
   );
 }
 
-export default Dashboard;
+export default OrdersPage;

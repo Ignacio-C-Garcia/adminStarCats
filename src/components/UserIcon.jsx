@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 
 function UserIcon() {
   const token = useSelector((state) => state.auth.token);
-  // const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
   let menuRef = useRef();
@@ -47,17 +46,16 @@ function UserIcon() {
           className={`dropdown_menu border z-3 ${open ? "active" : "inactive"}`}
         >
           <h3>
-            {token == "" ? "Café y Michis!" : "Nombre de usuario"}
+            {token == "" ? "Es necesario ser Admin" : "Bienvenido/a"}
             <br />
           </h3>
           {token !== "" ? (
             <ul className="p-0 mb-0">
-              <DropdownItem img={user} text={"Mi Perfil"} to={"/user"} />
-              <DropdownItem img={edit} text={"Ordenes"} to={"/ordenes"} />
+              <DropdownItem img={user} text={"Mi Perfil"} to={"/admin"} />
               <DropdownItem
                 img={logout}
                 text={"Cerrar Sesión"}
-                to={"/logout"}
+                to={"/cerrarSesion"}
               />
             </ul>
           ) : (
@@ -65,9 +63,8 @@ function UserIcon() {
               <DropdownItem
                 img={logout}
                 text={"Iniciar Sesión"}
-                to={"/login"}
+                to={"/iniciarSesion"}
               />
-              <DropdownItem img={logout} text={"Registrarse"} to={"/signup"} />
             </ul>
           )}
         </div>

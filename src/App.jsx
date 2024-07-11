@@ -2,41 +2,51 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "animate.css";
 import "./styles/App.css";
-
+import "react-tabulator/css/bootstrap/tabulator_bootstrap.min.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 //import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import AdminProducts from "./pages/AdminProducts";
-import AdminOrders from "./pages/AdminOrders";
-import NotFound from "./pages/NotFound";
-import LogOut from "./pages/LogOut";
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import ProductsPage from "./pages/ProductsPage";
+import AdminOrdersPage from "./pages/OrdersPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import LogOutPage from "./pages/LogOutPage";
+import TestingPage from "./pages/TestingPage";
+import CategoriesPage from "./pages/CategoriesPage";
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Login />,
-    },
-    {
-      path: "/dashboard",
-      element: <Dashboard />,
+      element: <DashboardPage />,
     },
     {
       path: "/productos",
-      element: <AdminProducts />,
+      element: <ProductsPage />,
     },
     {
-      path: "/ordenes",
-      element: <AdminOrders />,
+      path: "/categorias",
+      element: <CategoriesPage />,
     },
     {
-      path: "/logout",
-      element: <LogOut />,
+      path: "/pedidos",
+      element: <AdminOrdersPage />,
+    },
+    {
+      path: "/cerrarSesion",
+      element: <LogOutPage />,
+    },
+    {
+      path: "/iniciarSesion",
+      element: <LoginPage />,
     },
     {
       path: "*",
-      element: <NotFound />,
+      element: <NotFoundPage />,
+    },
+    {
+      path: "/testing",
+      element: <TestingPage />,
     },
   ]);
   return <RouterProvider router={router} />;

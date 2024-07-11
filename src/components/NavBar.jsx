@@ -25,28 +25,29 @@ function NavBar() {
           id="navbarSupportedContent"
         >
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link to="/products" className="nav-link"></Link>
-            </li>
-
-            <Link
-              to="/Products"
-              className="nav-link active"
-              aria-current="page"
-            >
-              Productos
+            <Link to="/categorias" className="nav-link active">
+              Categorías
             </Link>
             <li className="nav-item">
-              <Link to="/about" className="nav-link active" aria-current="page">
-                Sobre el Proyecto
+              <Link to="/productos" className="nav-link active">
+                Productos
               </Link>
             </li>
+            <Link to="/testing" className="nav-link active">
+              Testeos
+            </Link>
+            <Link to="/pedidos" className="nav-link active" aria-current="page">
+              Pedidos
+            </Link>
+            <Link className="nav-link active" aria-current="page">
+              Clientes
+            </Link>
+            <Link className="nav-link active" aria-current="page">
+              Admins
+            </Link>
           </ul>
           <div className="d-flex align-items-center">
             <UserIcon></UserIcon>
-            <Link to="/cart" className="nav-link ps-4">
-              <BagHeart size={30} />
-            </Link>
           </div>
         </div>
       </div>

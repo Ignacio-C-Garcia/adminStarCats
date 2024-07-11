@@ -1,18 +1,19 @@
 // Login.jsx
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Container, Row, Col, Form, Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { saveToken } from "../redux/authReducer";
 import { Link, Navigate } from "react-router-dom";
 import styles from "../styles/Login.module.css";
-import ButtonComponent from "../components/ButtonComponent";
+import StarCatsButton from "../components/StarCatsButton";
 import Footer from "../components/Footer";
 
-const Login = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  console.log(error);
   const [showAlert, setShowAlert] = useState(false);
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
@@ -92,29 +93,29 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className={`${styles.inputForm} rounded-pill p-2 ps-3 pe-3`}
                 />
-                <ButtonComponent
+                <StarCatsButton
                   type="submit"
                   className={`${styles.loginButton} rounded-pill`}
                 >
                   Ingresar
-                </ButtonComponent>
+                </StarCatsButton>
               </Form>
               <div
                 className={`${styles.buttonGroup} d-flex justify-content-between gap-2 pt-3`}
               >
-                <ButtonComponent
+                <StarCatsButton
                   as={Link}
                   to="/signup"
                   className={`${styles.loginButton} rounded-pill`}
                 >
                   Regístrate
-                </ButtonComponent>
-                <ButtonComponent
+                </StarCatsButton>
+                <StarCatsButton
                   type="submit"
                   className={`${styles.loginButton} rounded-pill`}
                 >
                   ¿Olvidaste tu contraseña?
-                </ButtonComponent>
+                </StarCatsButton>
               </div>
             </div>
           </Col>
@@ -123,8 +124,8 @@ const Login = () => {
       <Footer />
     </div>
   ) : (
-    <Navigate to="/productos" />
+    <Navigate to="/" />
   );
 };
 
-export default Login;
+export default LoginPage;

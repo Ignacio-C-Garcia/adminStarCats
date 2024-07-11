@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "../styles/NotFound.module.css";
 
-function NotFound() {
+function NotFoundPage() {
   return (
     <>
       <div className={`container-fluid   ${styles.container}`}>
@@ -26,4 +26,4 @@ function NotFound() {
   );
 }
 
-export default NotFound;
+export default NotFoundPage;

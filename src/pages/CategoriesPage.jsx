@@ -2,38 +2,37 @@ import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import { ReactTabulator } from "react-tabulator";
 import { useEffect, useState } from "react";
-import AddProductModal from "../components/AddProductModal";
 import { useSelector } from "react-redux";
-import "react-tabulator/lib/styles.css";
-import "react-tabulator/css/bootstrap/tabulator_bootstrap.min.css";
-import SideBar from "../components/adminSideBar";
-function Dashboard() {
+import ModalAddProduct from "../components/ModalAddProduct";
+import StarCatsButton from "../components/StarCatsButton";
+function CategoriesPage() {
   const auth = useSelector((state) => state.auth);
   const [data, setData] = useState([]);
   const [updatedRows, setUpdatedRows] = useState([]);
   const [deletedRows, setDeletedRows] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          import.meta.env.VITE_API_URL + "/products"
+          import.meta.env.VITE_API_URL + "/categories"
         );
         if (!response.ok) {
           throw new Error("API fetch error, !ok");
         }
-        const { products } = await response.json();
+        const { categories } = await response.json();
 
-        setData(products);
+        setData(categories);
       } catch (error) {
         throw new Error(error);
       }
     };
-
     fetchData();
   }, []);
   const columns = [
     {
       headerSort: false,
+      vertAlign: "middle",
       formatter: "buttonCross",
       hozAlign: "center",
       cellClick: (e, cell) => {
@@ -46,44 +45,22 @@ function Dashboard() {
       headerFilter: false,
     },
     {
-      title: "Pic",
-      field: "pic",
-      formatter: (cell) => {
-        const imgUrl = import.meta.env.VITE_IMG_PATH;
-        return `<img src="${imgUrl}${cell.getValue()}" style="height:50px;width:50px;">`;
-      },
-      formatterParams: {
-        height: "100px", // Altura de la imagen
-        width: "100px", // Ancho de la imagen
-      },
+      title: "Id",
+      field: "id",
       editor: "input",
-      headerFilter: false,
+      vertAlign: "middle",
+      hozAlign: "center",
+      headerHozAlign: "center",
+      headerSort: false,
     },
     {
       title: "Nombre",
       field: "name",
       editor: "input",
-    },
-    {
-      title: "Category",
-      field: "categoryId",
-      editor: "number",
-    },
-    {
-      title: "Price",
-      field: "price",
-      editor: "input",
-    },
-    {
-      title: "Stock",
-      field: "stock",
-      editor: "input",
-    },
-    {
-      title: "Description",
-      field: "description",
-      editor: "input",
-      width: 700,
+      vertAlign: "middle",
+      hozAlign: "center",
+      headerHozAlign: "center",
+      headerSort: false,
     },
   ];
 
@@ -129,28 +106,23 @@ function Dashboard() {
   return (
     <>
       <NavBar />
-
-      <div className="row">
-        <div className="col-2">
-          <SideBar />
+      <div className="container ">
+        <div className="d-flex justify-content-around pt-3">
+          <StarCatsButton onClick={handleSubmitClick}>
+            Guardar cambios
+          </StarCatsButton>
+          <ModalAddProduct setData={setData}></ModalAddProduct>
         </div>
-        <div className="col-10">
-          <div className="container">
-            <button className="btn btn-primary m-4" onClick={handleSubmitClick}>
-              Guardar cambios
-            </button>
-            <AddProductModal setData={setData}></AddProductModal>
-
-            <ReactTabulator
-              data={data}
-              columns={columns}
-              events={{ cellEdited: handleCellEdited }}
-              options={{
-                layout: "fitColumns",
-                responsiveLayout: "hide",
-              }}
-            />
-          </div>
+        <div className="tabulator-wrapper">
+          <ReactTabulator
+            data={data}
+            columns={columns}
+            events={{ cellEdited: handleCellEdited }}
+            options={{
+              responsiveLayout: "hide",
+              height: 600,
+            }}
+          />
         </div>
       </div>
 
@@ -159,4 +131,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default CategoriesPage;

@@ -29,6 +29,11 @@
   font-size: 0.9em;
 }
 .tabulator {
-  overflow: scroll;
-  height: 100%;
+  max-height: 650;
+  overflow-y: scroll;
+  padding-bottom: 10;
+}
+ul {
+  margin: 0;
+  padding: 0;
 }
