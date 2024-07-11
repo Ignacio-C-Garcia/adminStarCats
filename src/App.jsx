@@ -11,7 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import AdminProducts from "./pages/AdminProducts";
 import AdminOrders from "./pages/AdminOrders";
 import NotFound from "./pages/NotFound";
-
+import LogOut from "./pages/LogOut";
 function App() {
   const router = createBrowserRouter([
     {
@@ -29,6 +29,10 @@ function App() {
     {
       path: "/ordenes",
       element: <AdminOrders />,
+    },
+    {
+      path: "/logout",
+      element: <LogOut />,
     },
     {
       path: "*",

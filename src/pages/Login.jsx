@@ -110,6 +110,7 @@ const Login = () => {
                   Regístrate
                 </ButtonComponent>
                 <ButtonComponent
+                  type="submit"
                   className={`${styles.loginButton} rounded-pill`}
                 >
                   ¿Olvidaste tu contraseña?
@@ -122,7 +123,7 @@ const Login = () => {
       <Footer />
     </div>
   ) : (
-    <Navigate to="/ordenes" />
+    <Navigate to="/productos" />
   );
 };
 
