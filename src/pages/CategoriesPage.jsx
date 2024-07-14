@@ -3,8 +3,9 @@ import NavBar from "../components/NavBar";
 import { ReactTabulator } from "react-tabulator";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import ModalAddProduct from "../components/ModalAddProduct";
+
 import StarCatsButton from "../components/StarCatsButton";
+import ModalAddCategory from "../components/ModalAddCategory";
 function CategoriesPage() {
   const auth = useSelector((state) => state.auth);
   const [data, setData] = useState([]);
@@ -79,8 +80,6 @@ function CategoriesPage() {
     });
   };
   const handleSubmitClick = async () => {
-    console.log("Updated Rows:", updatedRows);
-    console.log("Deleted Rows:", deletedRows);
     for (const row of updatedRows) {
       await fetch(`${import.meta.env.VITE_API_URL}/products/${row.id}`, {
         method: "PATCH",
@@ -108,10 +107,10 @@ function CategoriesPage() {
       <NavBar />
       <div className="container ">
         <div className="d-flex justify-content-around pt-3">
-          <StarCatsButton onClick={handleSubmitClick}>
+          <StarCatsButton className={"w-25"} onClick={handleSubmitClick}>
             Guardar cambios
           </StarCatsButton>
-          <ModalAddProduct setData={setData}></ModalAddProduct>
+          <ModalAddCategory setData={setData} data={data}></ModalAddCategory>
         </div>
         <div className="tabulator-wrapper">
           <ReactTabulator
@@ -120,7 +119,7 @@ function CategoriesPage() {
             events={{ cellEdited: handleCellEdited }}
             options={{
               responsiveLayout: "hide",
-              height: 300,
+              height: 600,
             }}
           />
         </div>

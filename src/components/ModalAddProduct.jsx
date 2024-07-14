@@ -1,32 +1,38 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
+
 import Modal from "react-bootstrap/Modal";
 import StarCatsButton from "./StarCatsButton";
-/* eslint-disable react/prop-types */
-
 import { useSelector } from "react-redux";
-
-function ModalAddProduct({ setData }) {
+import Form from "react-bootstrap/Form";
+function ModalAddProduct({ setData, data }) {
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const auth = useSelector((state) => state.auth);
-  const [error, setError] = useState(false);
+
   const [formValues, setFormValues] = useState({
     pic: "",
     name: "",
     categoryId: undefined,
-    price: 0,
-    stock: 0,
+    price: { base: 0, 350: 0, 450: 0 },
+    stock: 99,
     featured: false,
     description: "",
+    calories: "99",
   });
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues({
       ...formValues,
       [name]: value,
+    });
+  };
+  const handlePriceChange = (e) => {
+    const { name, value } = e.target;
+    const newPrice = { ...formValues.price, [name]: value };
+    setFormValues((prev) => {
+      return { ...prev, price: newPrice };
     });
   };
   const handleOnSubmit = async (e) => {
@@ -40,20 +46,16 @@ function ModalAddProduct({ setData }) {
       },
       body: JSON.stringify(formValues),
     });
-    if (!response.ok) {
-      setError(true);
-    }
-    if (!response.ok) return setError(true);
+
     const data = await response.json();
     console.log("producto creado", data);
     setData((prev) => [...prev, data.product]);
   };
   return (
     <>
-      <StarCatsButton onClick={handleShow}>
-        Agregar nuevo Producto
+      <StarCatsButton onClick={handleShow} className={"w-25"}>
+        Producto nuevo
       </StarCatsButton>
-
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Agregar producto nuevo</Modal.Title>
@@ -86,40 +88,69 @@ function ModalAddProduct({ setData }) {
             </div>
             <div className="form-group">
               <label htmlFor="category">Category</label>
-              <input
-                type="text"
-                className="form-control"
-                id="category"
+              <Form.Select
+                onChange={handleInputChange}
                 name="categoryId"
                 value={formValues.categoryId}
-                onChange={handleInputChange}
-                required
-              />
+              >
+                <option>Seleccionar</option>
+                {data.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </Form.Select>
             </div>
-            <div className="form-group">
-              <label htmlFor="price">Price</label>
-              <input
-                type="text"
-                className="form-control"
-                id="price"
-                name="price"
-                value={formValues.price}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="stock">Stock</label>
-              <input
-                type="text"
-                className="form-control"
-                id="stock"
-                name="stock"
-                value={formValues.stock}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+            {formValues.categoryId == 1 && (
+              <div className="form-group">
+                <label htmlFor="price">Precio base</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="price"
+                  name="base"
+                  value={formValues.price.base}
+                  onChange={handlePriceChange}
+                  required
+                />
+                <label htmlFor="price">Precio 350</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="price"
+                  name="350"
+                  value={formValues.price[350]}
+                  onChange={handlePriceChange}
+                  required
+                />
+                <label htmlFor="price">Precio 450</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="price"
+                  name="450"
+                  value={formValues.price[450]}
+                  onChange={handlePriceChange}
+                  required
+                />
+              </div>
+            )}
+
+            {formValues.categoryId != 1 && (
+              <div className="form-group">
+                <label htmlFor="price">Precio base</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="price"
+                  name="base"
+                  value={formValues.price.base}
+                  onChange={handlePriceChange}
+                  required
+                />
+              </div>
+            )}
+
             <div className="form-group">
               <label htmlFor="description">Description</label>
               <input
@@ -132,16 +163,17 @@ function ModalAddProduct({ setData }) {
                 required
               />
             </div>
+            <div className="form-group text-center pt-4">
+              <StarCatsButton
+                type="submit"
+                onClick={handleClose}
+                className={"w-50"}
+              >
+                Enviar
+              </StarCatsButton>
+            </div>
           </form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cerrar
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Enviar
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   );

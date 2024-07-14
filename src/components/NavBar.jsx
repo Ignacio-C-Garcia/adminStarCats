@@ -42,16 +42,6 @@ function NavBar() {
                 Pedidos
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link active" aria-current="page">
-                Clientes
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link active" aria-current="page">
-                Admins
-              </Link>
-            </li>
           </ul>
           <div className="d-flex align-items-center">
             <UserIcon></UserIcon>

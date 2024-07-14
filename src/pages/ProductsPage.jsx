@@ -2,27 +2,44 @@ import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import { ReactTabulator } from "react-tabulator";
 import { useEffect, useState } from "react";
-
+import { Toaster, toast } from "sonner";
 import { useSelector } from "react-redux";
 import ModalAddProduct from "../components/ModalAddProduct";
 import StarCatsButton from "../components/StarCatsButton";
 function ProductsPage() {
-  const mapeo = { 1: "Cafés", 2: "Pastelería", 3: "Granos" };
   const auth = useSelector((state) => state.auth);
   const [data, setData] = useState([]);
   const [updatedRows, setUpdatedRows] = useState([]);
   const [deletedRows, setDeletedRows] = useState([]);
-  const selectEditor = (cell, onRendered, success, cancel) => {
-    const options = { Cafés: 1, Pastelería: 2, Granos: 3 };
+  const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          import.meta.env.VITE_API_URL + "/categories"
+        );
+        if (!response.ok) {
+          throw new Error("API fetch error, !ok");
+        }
+        const { categories } = await response.json();
 
+        setCategories(categories);
+      } catch (error) {
+        throw new Error(error);
+      }
+    };
+    fetchData();
+  }, []);
+  const selectEditor = (cell, onRendered, success, cancel) => {
     const select = document.createElement("select");
-    for (const [key, value] of Object.entries(options)) {
+    for (const cat of categories) {
       const optionElement = document.createElement("option");
-      optionElement.text = key;
-      optionElement.value = value;
+      optionElement.text = cat.name;
+      optionElement.value = cat.id;
       select.appendChild(optionElement);
     }
-    select.value = cell.getValue(); // establece el valor inicial
+    select.value = cell.getValue();
 
     // Eventos para manejar el cambio de valor
     select.addEventListener("change", () => {
@@ -143,7 +160,14 @@ function ProductsPage() {
       hozAlign: "center",
       headerHozAlign: "center",
       formatter: (cell) => {
-        return `${mapeo[cell.getValue()]}`;
+        const cellValue = cell.getValue();
+
+        for (const cat of categories) {
+          if (cat.id == cellValue) {
+            return cat.name;
+          }
+        }
+        return cellValue;
       },
       headerSort: false,
     },
@@ -189,28 +213,48 @@ function ProductsPage() {
     });
   };
   const handleSubmitClick = async () => {
-    console.log("Updated Rows:", updatedRows);
-    console.log("Deleted Rows:", deletedRows);
-    for (const row of updatedRows) {
-      await fetch(`${import.meta.env.VITE_API_URL}/products/${row.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth.token,
-        },
-        body: JSON.stringify(row),
-      });
+    if (updatedRows.length == 0 && deletedRows.length == 0) return;
+    setIsLoading(true);
+    try {
+      for (const row of updatedRows) {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/products/${row.id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: auth.token,
+            },
+            body: JSON.stringify(row),
+          }
+        );
+
+        if (response.status != 200) throw response;
+      }
+      for (const row of deletedRows) {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/products/${row.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: auth.token,
+            },
+          }
+        );
+        setUpdatedRows([]);
+        setDeletedRows([]);
+        if (response.status != 200) throw response;
+      }
+      setIsLoading(false);
+      toast.success("Se ha modificado con éxito todos los productos");
+    } catch (response) {
+      setIsLoading(false);
+      const { status } = response;
+      if (status == 401)
+        return toast.error("Error con los permisos de autenticación");
+      else return toast.error("Algunas modificaciones no han sido aplicadas");
     }
-    for (const row of deletedRows) {
-      await fetch(`${import.meta.env.VITE_API_URL}/products/${row.id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth.token,
-        },
-      });
-    }
-    console.log("actualizado");
   };
 
   return (
@@ -218,10 +262,17 @@ function ProductsPage() {
       <NavBar />
       <div className="container ">
         <div className="d-flex justify-content-around pt-3">
-          <StarCatsButton onClick={handleSubmitClick}>
+          <StarCatsButton
+            onClick={handleSubmitClick}
+            isLoading={isLoading}
+            className={"w-25"}
+          >
             Guardar cambios
           </StarCatsButton>
-          <ModalAddProduct setData={setData}></ModalAddProduct>
+          <ModalAddProduct
+            setData={setData}
+            data={categories}
+          ></ModalAddProduct>
         </div>
         <div className="tabulator-wrapper">
           <ReactTabulator
@@ -236,7 +287,7 @@ function ProductsPage() {
           />
         </div>
       </div>
-
+      <Toaster richColors position="top-center" />
       <Footer />
     </>
   );
