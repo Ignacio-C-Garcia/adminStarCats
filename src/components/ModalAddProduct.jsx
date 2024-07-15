@@ -22,12 +22,24 @@ function ModalAddProduct({ setData, data }) {
     calories: "99",
   });
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
+    const name = e.target.name;
+    if (name == "pic") {
+      const parts = e.target.value.split(/[\\/]/);
+      const value = parts[parts.length - 1];
+      console.log(value);
+      setFormValues({
+        ...formValues,
+        [name]: value,
+      });
+    } else {
+      const value = e.target.value;
+      setFormValues({
+        ...formValues,
+        [name]: value,
+      });
+    }
   };
+
   const handlePriceChange = (e) => {
     const { name, value } = e.target;
     const newPrice = { ...formValues.price, [name]: value };
@@ -63,19 +75,18 @@ function ModalAddProduct({ setData, data }) {
         <Modal.Body>
           <form id="addProductForm" onSubmit={handleOnSubmit}>
             <div className="form-group">
-              <label htmlFor="pic">Pic</label>
+              <label htmlFor="imagen">Imagen</label>
               <input
-                type="text"
+                type="file"
                 className="form-control"
                 id="pic"
                 name="pic"
-                value={formValues.pic}
                 onChange={handleInputChange}
                 required
               />
             </div>
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">Nombre</label>
               <input
                 type="text"
                 className="form-control"
@@ -87,7 +98,7 @@ function ModalAddProduct({ setData, data }) {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="category">Category</label>
+              <label htmlFor="category">Categoría</label>
               <Form.Select
                 onChange={handleInputChange}
                 name="categoryId"

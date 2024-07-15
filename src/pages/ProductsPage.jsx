@@ -136,7 +136,6 @@ function ProductsPage() {
         height: "100px",
         width: "100px",
       },
-      editor: "input",
       headerSort: false,
       width: 70,
       headerHozAlign: "center",
@@ -282,7 +281,6 @@ function ProductsPage() {
             options={{
               layout: "fitColumns",
               responsiveLayout: "hide",
-              height: 600,
             }}
           />
         </div>

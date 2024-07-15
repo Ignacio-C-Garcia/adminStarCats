@@ -3,7 +3,7 @@ import NavBar from "../components/NavBar";
 import { ReactTabulator } from "react-tabulator";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-
+import { Toaster, toast } from "sonner";
 import StarCatsButton from "../components/StarCatsButton";
 import ModalAddCategory from "../components/ModalAddCategory";
 function CategoriesPage() {
@@ -11,7 +11,7 @@ function CategoriesPage() {
   const [data, setData] = useState([]);
   const [updatedRows, setUpdatedRows] = useState([]);
   const [deletedRows, setDeletedRows] = useState([]);
-
+  const [isLoading, setIsLoading] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -80,26 +80,49 @@ function CategoriesPage() {
     });
   };
   const handleSubmitClick = async () => {
-    for (const row of updatedRows) {
-      await fetch(`${import.meta.env.VITE_API_URL}/products/${row.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth.token,
-        },
-        body: JSON.stringify(row),
-      });
+    if (updatedRows.length == 0 && deletedRows.length == 0) return;
+    setIsLoading(true);
+    try {
+      for (const row of updatedRows) {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/categories/${row.id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: auth.token,
+            },
+            body: JSON.stringify(row),
+          }
+        );
+
+        if (response.status != 200) throw response;
+      }
+      for (const row of deletedRows) {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/categories/${row.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: auth.token,
+            },
+          }
+        );
+        setUpdatedRows([]);
+        setDeletedRows([]);
+        console.log(response);
+        if (response.status != 200) throw response;
+      }
+      setIsLoading(false);
+      toast.success("Se ha modificado con éxito todos los productos");
+    } catch (response) {
+      setIsLoading(false);
+      const { status } = response;
+      if (status == 401)
+        return toast.error("Error con los permisos de autenticación");
+      else return toast.error("Algunas modificaciones no han sido aplicadas");
     }
-    for (const row of deletedRows) {
-      await fetch(`${import.meta.env.VITE_API_URL}/products/${row.id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth.token,
-        },
-      });
-    }
-    console.log("actualizado");
   };
 
   return (
@@ -124,7 +147,7 @@ function CategoriesPage() {
           />
         </div>
       </div>
-
+      <Toaster richColors position="top-center" />
       <Footer />
     </>
   );
