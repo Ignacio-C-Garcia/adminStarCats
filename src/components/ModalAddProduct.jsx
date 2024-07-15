@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-
+import { Toaster, toast } from "sonner";
 import Modal from "react-bootstrap/Modal";
 import StarCatsButton from "./StarCatsButton";
 import { useSelector } from "react-redux";
@@ -10,7 +10,7 @@ function ModalAddProduct({ setData, data }) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const auth = useSelector((state) => state.auth);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState({
     pic: "",
     name: "",
@@ -49,23 +49,37 @@ function ModalAddProduct({ setData, data }) {
   };
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    console.log("estos son los inputs", formValues);
-    const response = await fetch(import.meta.env.VITE_API_URL + "/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: auth.token,
-      },
-      body: JSON.stringify(formValues),
-    });
-
-    const data = await response.json();
-    console.log("producto creado", data);
-    setData((prev) => [...prev, data.product]);
+    setIsLoading(true);
+    try {
+      const response = await fetch(import.meta.env.VITE_API_URL + "/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth.token,
+        },
+        body: JSON.stringify(formValues),
+      });
+      if (response.status != 201) throw response;
+      const data = await response.json();
+      console.log("producto creado", data);
+      setData((prev) => [...prev, data.product]);
+      setIsLoading(false);
+      toast.success("Se ha agregado con éxito el producto");
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      if (error.status == 401)
+        toast.error("Error con los permisos de autenticación");
+      else toast.error("Ha ocurrido un error");
+    }
   };
   return (
     <>
-      <StarCatsButton onClick={handleShow} className={"w-25"}>
+      <StarCatsButton
+        onClick={handleShow}
+        className={"w-25"}
+        isLoading={isLoading}
+      >
         Producto nuevo
       </StarCatsButton>
       <Modal show={show} onHide={handleClose}>
