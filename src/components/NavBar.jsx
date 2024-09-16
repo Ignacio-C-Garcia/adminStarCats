@@ -1,7 +1,8 @@
 import "../styles/NavBar.module.css";
 import { Link } from "react-router-dom";
 import UserIcon from "./UserIcon";
-import { BagHeart } from "react-bootstrap-icons";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+
 function NavBar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-black text-white ">
